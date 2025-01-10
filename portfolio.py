@@ -36,7 +36,20 @@ if portfolio_ids.size == 0:
     st.warning("No portfolios available in the database.")
     st.stop()
 
-selected_portfolio_id = st.radio("Select a Portfolio ID", portfolio_ids)
+portfolio_groups = {}
+for portfolio_id in portfolio_ids:
+    prefix = portfolio_id.split('-')[0]
+    if prefix not in portfolio_groups:
+        portfolio_groups[prefix] = []
+    portfolio_groups[prefix].append(portfolio_id)
+
+st.sidebar.title("Portfolio Groups")
+selected_group = st.sidebar.selectbox("Select a Group", options=list(portfolio_groups.keys()))
+
+selected_portfolio_id = st.sidebar.radio(
+    f"Portfolios in {selected_group}", portfolio_groups[selected_group]
+)
+
 filtered_equity = df_equity[df_equity['portfolio_id'] == selected_portfolio_id].copy()
 filtered_metrics = df_metrics[df_metrics['portfolio_id'] == selected_portfolio_id].copy()
 filtered_trades = df_trades[df_trades['portfolio_id'] == selected_portfolio_id].copy()
@@ -61,8 +74,12 @@ if not filtered_equity.empty:
     st.plotly_chart(equity_fig)
 
 if not filtered_metrics.empty:
-    st.subheader("Metrics Table")
-    st.table(filtered_metrics)
+    st.subheader("Metrics")
+
+    transposed_metrics = filtered_metrics.set_index('portfolio_id').transpose()
+
+    st.table(transposed_metrics)
+
 end_date = datetime.now()
 start_date = end_date - timedelta(days=30)
 filtered_trades['Fecha_inicio'] = pd.to_datetime(filtered_trades['Fecha_inicio'])
