@@ -1,2 +1,0 @@
-- name: Debug environment variables
-  run: env | grep MYSQL_CONNECTION_STRING
