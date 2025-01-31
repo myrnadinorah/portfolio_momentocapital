@@ -9,12 +9,12 @@ import os
 load_dotenv()
 
 mysql_connection_string = os.getenv("MYSQL_CONNECTION_STRING")
+print(f"MYSQL_CONNECTION_STRING: {os.getenv('MYSQL_CONNECTION_STRING')}")
 
 if not mysql_connection_string:
     st.error("MySQL connection string is missing. Check your .env file.")
     st.stop()
     
-print(f"MYSQL_CONNECTION_STRING: {os.getenv('MYSQL_CONNECTION_STRING')}")
 
 engine = create_engine(mysql_connection_string)
 
