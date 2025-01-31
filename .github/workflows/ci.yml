@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy  # Nombre del workflow
 
 on:
   push:
@@ -7,14 +7,15 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Usamos un runner de Ubuntu
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Clona el código del repositorio
 
       - name: Setup environment variables
         run: echo "MYSQL_CONNECTION_STRING=${{ secrets.MYSQL_CONNECTION_STRING }}" >> $GITHUB_ENV
 
       - name: Verificar variable (solo para pruebas, quítalo después)
-        run: echo $MYSQL_CONNECTION_STRING
+        run: |
+          echo "Longitud de MYSQL_CONNECTION_STRING: ${#MYSQL_CONNECTION_STRING}"
