@@ -11,6 +11,21 @@ load_dotenv()
 mysql_connection_string = os.getenv("MYSQL_CONNECTION_STRING")
 
 if not mysql_connection_string:
+    raise ValueError("MYSQL_CONNECTION_STRING no está disponible en Streamlit.")
+
+# 🔹 Configurar `ssl_disabled=True` si era necesario para pymysql
+engine = create_engine(mysql_connection_string, connect_args={"ssl_disabled": True})
+
+try:
+    with engine.connect() as connection:
+        print("✅ Conexión con SQLAlchemy exitosa desde Streamlit")
+except Exception as e:
+    print(f"❌ Error en la conexión con SQLAlchemy desde Streamlit: {e}")
+
+
+
+
+if not mysql_connection_string:
     st.error("MySQL connection string is missing. Check your .env file.")
     st.stop()
     
